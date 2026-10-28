@@ -122,10 +122,14 @@ h1{margin:18px 6px 2px;font-size:38px;line-height:1.1;letter-spacing:-.5px}
       list.appendChild(card);
     });
   }
+  var SB_URL='https://fzoxfsyjpwxmtziwncho.supabase.co';
+  var SB_KEY='sb_publishable_Ayd3mL1xmD9KlcWgPyI7XA_yUP2uV81';
   function load(){
-    fetch('apps.json?t='+Date.now(),{cache:'no-store'})
+    fetch(SB_URL+'/rest/v1/apps?select=*&published=eq.true&order=updated_at.desc',{cache:'no-store',headers:{apikey:SB_KEY}})
       .then(function(r){if(!r.ok)throw 0;return r.json()})
-      .then(function(d){apps=d.apps||[];render()})
+      .then(function(d){
+        apps=d.map(function(a){return{id:a.package,name:a.name,subtitle:a.subtitle,description:a.description,version:a.version,size:a.size,icon:a.icon_url,url:a.apk_url}});
+        render()})
       .catch(function(){count.textContent='';message('تعذّر تحميل قائمة التطبيقات. تحقق من الاتصال ثم أعد المحاولة.',true)});
   }
   q.addEventListener('input',render);
